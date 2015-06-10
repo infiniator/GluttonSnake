@@ -13,11 +13,12 @@ int main(void)
 	int endGame = 0;  //set this flag if the game has ended
 	int headDirection = 4;  //tells the direction in which the head of the snake is moving right now. 1=up, 2=down, 3=left, 4=right
 	int tailDirection = 4;  //tells the direction in which the tail of the snake is moving right now. 1=up, 2=down, 3=left, 4=right
-	int turnX[50],turnY[50];  //tells the coordinates at which the snake has started turning
-	int turnDirection[50];  //tells the direction in which the turn is made
+	int turnX[100],turnY[100];  //tells the coordinates at which the snake has started turning
+	int turnDirection[100];  //tells the direction in which the turn is made
 	int activeTurns = 0;  //tells the no. of turns active right now
 	int foodX,foodY;  //tells coordinates of food
 	int counter;  //acts as a counter for the loops
+	int keyFlag=0;  //prevents rapid pressing of keys and facilitates processing
 	unsigned long int score = 0;
 	char playerName[20];
 	char keyPress;  //logs the key pressed by the player
@@ -52,16 +53,26 @@ int main(void)
 		//next three lines draw the snake's advancement from the initial position
 		if(activeTurns == 0)
 			line(snakeStartX,snakeStartY,snakeEndX,snakeEndY);
-		else if(activeTurns > 0)
+		else if(activeTurns > 2)
 		{
 			line(turnX[0],turnY[0],snakeEndX,snakeEndY);
-			if(turnX[0] == snakeEndX && turnY[0] == snakeEndY)
 			for(counter = 1 ; counter < activeTurns - 1 ; counter++)
 			{
 				line(turnX[counter],turnY[counter],turnX[counter - 1],turnY[counter - 1]);
 				line(turnX[counter + 1],turnY[counter + 1],turnX[counter],turnY[counter]);
 			}
 			line(snakeStartX,snakeStartY,turnX[activeTurns - 1],turnY[activeTurns - 1]);
+		}
+		else if(activeTurns == 2)
+		{
+			line(turnX[0],turnY[0],snakeEndX,snakeEndY);
+			line(snakeStartX,snakeStartY,turnX[1],turnY[1]);
+			line(turnX[0],turnY[0],turnX[1],turnY[1]);
+		}
+		else if(activeTurns==1)
+		{
+			line(turnX[0],turnY[0],snakeEndX,snakeEndY);
+			line(snakeStartX,snakeStartY,turnX[0],turnY[0]);
 		}
 		//next nine lines draw food for our snake
 		putpixel(foodX-1,foodY-1,WHITE);
@@ -194,8 +205,9 @@ int main(void)
 			}
 			activeTurns--;
 		}
-		if(kbhit())  //a key has been pressed
+		if(kbhit() && keyFlag==0)  //a key has been pressed
 		{
+			keyFlag=1;
 			keyPress = getch();
 			if(keyPress == 27)
 			{
@@ -205,7 +217,6 @@ int main(void)
 			if(keyPress == 0)  //it's an arrow key
 			{
 				keyPress = getch();
-				delay(100);
 				activeTurns++;
 				turnX[activeTurns-1]=snakeStartX;
 				turnY[activeTurns-1]=snakeStartY;
@@ -246,6 +257,10 @@ int main(void)
 					turnDirection[activeTurns - 1] = 4;
 				}
 			}
+		}
+		if(!kbhit())
+		{
+			keyFlag=0;
 		}
 		delay(10);  //can be kept dynamic incase we need to implement different difficulties of gameplay; will be included as a patch
 		cleardevice();
