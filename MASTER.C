@@ -2,10 +2,9 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<conio.h>
-//Release 1.0 is ready, but some bugs still remain unsolved... Some of them are:
-//1. only the first and last lines appear. no line between the turns appears.
-//2. snake does not die when it clashes with his body
-//3. Sometimes the game gets erratic where the first line grows indefinitely whereas the last line is drawn in a random manner
+//Release 1.1 is ready, but some bugs still remain unsolved... Some of them are:
+//1. snake does not die when it clashes with his body
+//2. Sometimes the game gets erratic where the first line grows indefinitely whereas the last line is drawn in a random manner
 int main(void)
 {
 	int gdriver = DETECT, gmode, errorcode;
